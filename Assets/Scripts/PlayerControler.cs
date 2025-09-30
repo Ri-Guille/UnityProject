@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -20,18 +21,30 @@ public class PlayerControler : MonoBehaviour
 
     private int score;
     private float timer = 0;
+    private int multiplier = 10;
+    [SerializeField]
+    private UIDocument uidocument;
+    //Referencia al objetivo de tipo Label donde se mantiene el score text
+    private Label scoreText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Iniciamos el objeto RigidBody2d
         rb2d = GetComponent<Rigidbody2D>();
         explosion.SetActive(false);
+        scoreText = uidocument.rootVisualElement.Q<Label>("ScoreLabel");
     }
 
     // Update is called once per frame
     void Update()
     {
         timer = Time.deltaTime + timer;
+        //Conversion de float a Int
+        score = Mathf.FloorToInt(timer * multiplier);
+        //En C sharp la conversion de un tipo a otro no se hace automaticamente
+        //score = (int)(timer * 5);
+        scoreText.text = "Score: " + score;
         Debug.Log("El tiempo que a pasado es " + timer);
 
         if (Mouse.current.leftButton.isPressed)
